@@ -283,20 +283,19 @@
         }
 
         function blowCandles() {
-    const status = document.getElementById('candle-status');
     const message = document.getElementById('wish-message');
     const cake = document.getElementById('birthday-cake');
 
     // 1. Fade out the flame (Simulates the blow)
-    status.style.transition = "all 0.5s ease";
-    status.style.transform = "translateY(-20px) scale(0)";
-    status.style.opacity = "0";
+    cake.style.transition = "all 0.5s ease";
+    cake.style.transform = "translateY(-20px) scale(0)";
+    cake.style.opacity = "0";
     
     // 2. After a split second, show the "smoke/sparkle" and the message
     setTimeout(() => {
-        status.innerHTML = "✨"; // Swapping fire for sparkles
-        status.style.transform = "translateY(0) scale(1.2)";
-        status.style.opacity = "1";
+        cake.innerHTML = "<div style="font-size: 8rem;">🍰</div>"; 
+        cake.style.transform = "translateY(0) scale(1.2)";
+        cake.style.opacity = "1";
         
         message.style.opacity = "1"; // Show the romantic text
         
