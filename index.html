@@ -12,6 +12,24 @@
             --text: #fff;
         }
 
+        .signature {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 9999; /* Keeps it above everything else */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+    animation: fadeIn 2s ease-in-out;
+}
+
         body, html {
             margin: 0;
             padding: 0;
@@ -223,6 +241,10 @@
     <div style="font-size: 5rem;">🎁✨💃</div>
     <p><i>Have a blast! It's your birthday 😉</i></p>
 </section>
+
+    <div class="signature">
+    Made with ❤️ by Shekhar
+</div>
 
     <script>
         // Page Navigation
