@@ -326,6 +326,70 @@
         cake.style.animation = "none"; // Stop the aggressive pulsing
     }, 600);
 }
+
+        const showBtn = document.getElementById('unlock-btn');
+        showBtn.addEventListener('click', async () => {
+
+
+  // 2. Start the microphone (Valid because it's inside a click)
+  try {
+    await detectBlow(() => {
+      console.log("Section is visible and user blew!");
+    });
+  } catch (err) {
+    console.error("Mic blocked or not found", err);
+  }
+});
+
+        async function detectBlow(callback) {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const audioContext = new AudioContext();
+  const source = audioContext.createMediaStreamSource(stream);
+  const analyser = audioContext.createAnalyser();
+  
+  // Set FFT size; 512 is a good balance for speed and accuracy
+  analyser.fftSize = 512;
+  source.connect(analyser);
+
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+
+  const threshold = 120; // Sensitivity (0-255). Lower = more sensitive.
+  let blowSamples = 0;
+
+  function check() {
+    analyser.getByteFrequencyData(dataArray);
+    
+    // We check the "low" frequencies (the first few bins of the array)
+    // because blowing is low-pitched noise.
+    let lowSum = 0;
+    for (let i = 0; i < 10; i++) {
+      lowSum += dataArray[i];
+    }
+    let averageLow = lowSum / 10;
+
+    if (averageLow > threshold) {
+      blowSamples++;
+      // If we detect blowing for 5 frames in a row, trigger the event
+      if (blowSamples > 5) { 
+        callback();
+        blowSamples = 0; // Reset so it doesn't fire 60 times a second
+      }
+    } else {
+      blowSamples = 0;
+    }
+
+    requestAnimationFrame(check);
+  }
+
+  check();
+}
+
+// Usage:
+detectBlow(() => {
+  console.log("💨 User blew into the mic!");
+  document.body.style.backgroundColor = "skyblue"; // Example action
+});
     </script>
 </body>
 </html>
