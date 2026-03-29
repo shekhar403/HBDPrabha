@@ -325,6 +325,7 @@ const unlockBtn = document.getElementById('unlock-btn');
 unlockBtn.addEventListener('click', async () => {
     // Start mic detection immediately when she unlocks the puzzle
     try {
+         console.error("Adding listener");
         await detectBlow(blowCandles); 
     } catch (err) {
         console.error("Mic blocked or not found", err);
@@ -355,10 +356,12 @@ async function detectBlow(callback) {
             blowSamples++;
             if (blowSamples > 6) { // Requires a sustained blow
                 callback();
+                console.error("some blow" + blowSamples);
                 // We don't stop the loop, but blowCandles has a 'blown' check
             }
         } else {
             blowSamples = 0;
+             console.error("No blow" + blowSamples);
         }
         requestAnimationFrame(check);
     }
