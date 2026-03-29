@@ -217,7 +217,7 @@
     <h1>Make a Wish... 🕯️</h1>
     <p>Close your eyes, give the screen a little blow, and click the cake!</p>
     
-    <div class="gift-container cake-anim" id="birthday-cake" onclick="blowCandles()">
+    <div class="gift-container cake-anim" id="birthday-cake">
         <div style="font-size: 8rem;">🎂</div>
     </div>
 
@@ -225,7 +225,7 @@
         ✨ Your wish has been sent to the universe. ✨
     </div>
 
-    <button class="btn" onclick="nextPage(5)">Continue the Surprise →</button>
+    <button class="btn" id="surprise_but" onclick="nextPage(5)" style="display: none;">Continue the Surprise →</button>
 </section>
 
 <section id="page5" class="page">
@@ -356,6 +356,8 @@ async function detectBlow(callback) {
             blowSamples++;
             if (blowSamples > 6) { // Requires a sustained blow
                 callback();
+                const surpriseBtn = document.getElementById('surprise_but');
+                surpriseBtn.style.display = "block";
                 console.error("some blow" + blowSamples);
                 // We don't stop the loop, but blowCandles has a 'blown' check
             }
