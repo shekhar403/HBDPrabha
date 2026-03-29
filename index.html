@@ -247,149 +247,123 @@
 </div>
 
     <script>
-        // Page Navigation
-        function nextPage(pageNumber) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page' + pageNumber).classList.add('active');
+       // Page Navigation
+function nextPage(pageNumber) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + pageNumber).classList.add('active');
 
-            if(pageNumber === 4) {
-                startConfetti();
-            }
-        }
+    if (pageNumber === 4) {
+        startConfetti();
+    }
+}
 
-        // Puzzle Logic
-        let switches = [false, false, false];
-        function toggleSwitch(num) {
-            switches[num-1] = !switches[num-1];
-            const btn = document.getElementById('sw' + num);
-            btn.classList.toggle('on');
+// Puzzle Logic
+let switches = [false, false, false];
+function toggleSwitch(num) {
+    switches[num - 1] = !switches[num - 1];
+    const btn = document.getElementById('sw' + num);
+    btn.classList.toggle('on');
+    checkPuzzle();
+}
 
-            checkPuzzle();
-        }
+function checkPuzzle() {
+    const status = document.getElementById('puzzle-status');
+    const unlockBtn = document.getElementById('unlock-btn');
+    // Logic: Switch 1 and 3 must be ON, Switch 2 must be OFF
+    if (switches[0] === true && switches[1] === false && switches[2] === true) {
+        status.innerText = "Logic: ACCESS GRANTED";
+        status.style.color = "#00ff88";
+        unlockBtn.style.display = "block";
+    } else {
+        status.innerText = "Logic: DENIED";
+        status.style.color = "white";
+        unlockBtn.style.display = "none";
+    }
+}
 
-        function checkPuzzle() {
-            const status = document.getElementById('puzzle-status');
-            const unlockBtn = document.getElementById('unlock-btn');
+// Heart Background Effect
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 400);
 
-            // Logic: Switch 1 and 3 must be ON, Switch 2 must be OFF
-            if (switches[0] === true && switches[1] === false && switches[2] === true) {
-                status.innerText = "Logic: ACCESS GRANTED";
-                status.style.color = "#00ff88";
-                unlockBtn.style.display = "block";
-            } else {
-                status.innerText = "Logic: DENIED";
-                status.style.color = "white";
-                unlockBtn.style.display = "none";
-            }
-        }
+function startConfetti() {
+    console.log("Birthday Celebration Started!");
+}
 
-        // Heart Background Effect
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.style.duration = Math.random() * 3 + 3 + 's';
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 6000);
-        }
-        setInterval(createHeart, 400);
-
-        function startConfetti() {
-            // Can add external confetti library here if desired!
-            console.log("Birthday Celebration Started!");
-        }
-
-        function blowCandles() {
+// THE BLOW ACTION
+function blowCandles() {
     const message = document.getElementById('wish-message');
     const cake = document.getElementById('birthday-cake');
 
-    // 1. Fade out the flame (Simulates the blow)
+    // Prevent double-firing if she clicks AND blows
+    if (cake.classList.contains('blown')) return;
+    cake.classList.add('blown');
+
     cake.style.transition = "all 0.5s ease";
     cake.style.transform = "translateY(-20px) scale(0)";
     cake.style.opacity = "0";
-    
-    // 2. After a split second, show the "smoke/sparkle" and the message
+
     setTimeout(() => {
         cake.innerHTML = `<div style="font-size: 8rem;">🍰</div>`;
         cake.style.transform = "translateY(0) scale(1.2)";
         cake.style.opacity = "1";
-        
-        message.style.opacity = "1"; // Show the romantic text
-        
-        // Make the cake glow softly now that the candles are out
+        message.style.opacity = "1";
         cake.style.filter = "drop-shadow(0 0 20px rgba(255, 255, 255, 0.7))";
-        cake.style.animation = "none"; // Stop the aggressive pulsing
+        cake.style.animation = "none";
     }, 600);
 }
 
-        const showBtn = document.getElementById('unlock-btn');
-        showBtn.addEventListener('click', async () => {
-
-
-  // 2. Start the microphone (Valid because it's inside a click)
-  try {
-    await detectBlow(() => {
-      console.log("Section is visible and user blew!");
-    });
-  } catch (err) {
-    console.error("Mic blocked or not found", err);
-  }
+// MICROPHONE LOGIC
+const unlockBtn = document.getElementById('unlock-btn');
+unlockBtn.addEventListener('click', async () => {
+    // Start mic detection immediately when she unlocks the puzzle
+    try {
+        await detectBlow(blowCandles); 
+    } catch (err) {
+        console.error("Mic blocked or not found", err);
+    }
 });
 
-        async function detectBlow(callback) {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const audioContext = new AudioContext();
-  const source = audioContext.createMediaStreamSource(stream);
-  const analyser = audioContext.createAnalyser();
-  
-  // Set FFT size; 512 is a good balance for speed and accuracy
-  analyser.fftSize = 512;
-  source.connect(analyser);
+async function detectBlow(callback) {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
 
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
+    analyser.fftSize = 512;
+    source.connect(analyser);
 
-  const threshold = 120; // Sensitivity (0-255). Lower = more sensitive.
-  let blowSamples = 0;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const threshold = 110; // Slightly more sensitive for a "wish"
+    let blowSamples = 0;
 
-  function check() {
-    analyser.getByteFrequencyData(dataArray);
-    
-    // We check the "low" frequencies (the first few bins of the array)
-    // because blowing is low-pitched noise.
-    let lowSum = 0;
-    for (let i = 0; i < 10; i++) {
-      lowSum += dataArray[i];
+    function check() {
+        analyser.getByteFrequencyData(dataArray);
+        let lowSum = 0;
+        for (let i = 0; i < 10; i++) { lowSum += dataArray[i]; }
+        let averageLow = lowSum / 10;
+
+        if (averageLow > threshold) {
+            blowSamples++;
+            if (blowSamples > 6) { // Requires a sustained blow
+                callback();
+                // We don't stop the loop, but blowCandles has a 'blown' check
+            }
+        } else {
+            blowSamples = 0;
+        }
+        requestAnimationFrame(check);
     }
-    let averageLow = lowSum / 10;
-
-    if (averageLow > threshold) {
-      blowSamples++;
-      // If we detect blowing for 5 frames in a row, trigger the event
-      if (blowSamples > 5) { 
-        callback();
-        blowSamples = 0; // Reset so it doesn't fire 60 times a second
-      }
-    } else {
-      blowSamples = 0;
-    }
-
-    requestAnimationFrame(check);
-  }
-
-  check();
+    check();
 }
-
-// Usage:
-detectBlow(() => {
-  console.log("💨 User blew into the mic!");
-  document.body.style.backgroundColor = "skyblue"; // Example action
-});
     </script>
 </body>
 </html>
