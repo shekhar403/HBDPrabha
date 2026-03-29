@@ -133,6 +133,13 @@
     animation: cakePulse 2s ease-in-out infinite;
 }
 
+        #wish-message {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    text-shadow: 0 0 5px rgba(255, 133, 161, 0.5);
+}
+
 .cake-anim:hover {
     transform: scale(1.15); /* Slightly grows when she hovers over it to "blow" */
 }
@@ -190,14 +197,15 @@
 
    <section id="page4" class="page">
     <h1>Make a Wish... 🕯️</h1>
-    <p>Close your eyes, give the screen a little blow, and let the magic happen.</p>
+    <p>Close your eyes, give the screen a little blow, and click the cake!</p>
     
     <div class="gift-container cake-anim" id="birthday-cake" onclick="blowCandles()">
-        <span id="candle-flame">🔥</span><br>🎂
+        <div id="candle-status" style="font-size: 2.5rem; margin-bottom: -30px; position: relative; z-index: 2;">🔥</div>
+        <div style="font-size: 8rem;">🎂</div>
     </div>
 
-    <div id="wish-message" style="display: none; margin-top: 20px; color: #ff85a1; font-weight: bold;">
-        ✨ May every single one of your wishes come true. ✨
+    <div id="wish-message" style="opacity: 0; margin-top: 20px; color: #ff85a1; font-weight: bold; transition: 1s;">
+        ✨ Your wish has been sent to the universe. ✨
     </div>
 
     <button class="btn" onclick="nextPage(5)">Continue the Surprise →</button>
@@ -276,24 +284,27 @@
         }
 
         function blowCandles() {
-    const flame = document.getElementById('candle-flame');
+    const status = document.getElementById('candle-status');
     const message = document.getElementById('wish-message');
     const cake = document.getElementById('birthday-cake');
 
-    // Fade out the flame
-    flame.style.transition = "opacity 1s ease";
-    flame.style.opacity = "0";
+    // 1. Fade out the flame (Simulates the blow)
+    status.style.transition = "all 0.5s ease";
+    status.style.transform = "translateY(-20px) scale(0)";
+    status.style.opacity = "0";
     
-    // Add a little extra sparkle to the cake
-    cake.style.filter = "drop-shadow(0 0 30px #fff)";
-    
-    // Show the wish message
+    // 2. After a split second, show the "smoke/sparkle" and the message
     setTimeout(() => {
-        flame.innerHTML = "✨"; // Change fire to sparkles
-        flame.style.opacity = "1";
-        message.style.display = "block";
-        message.classList.add('fadeIn');
-    }, 1000);
+        status.innerHTML = "✨"; // Swapping fire for sparkles
+        status.style.transform = "translateY(0) scale(1.2)";
+        status.style.opacity = "1";
+        
+        message.style.opacity = "1"; // Show the romantic text
+        
+        // Make the cake glow softly now that the candles are out
+        cake.style.filter = "drop-shadow(0 0 20px rgba(255, 255, 255, 0.7))";
+        cake.style.animation = "none"; // Stop the aggressive pulsing
+    }, 600);
 }
     </script>
 </body>
