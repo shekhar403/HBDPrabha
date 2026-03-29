@@ -117,6 +117,38 @@
             0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
+
+        /* Cake & Teddy Container */
+.gift-container {
+    font-size: 8rem;
+    margin: 20px 0;
+    position: relative;
+    display: inline-block;
+}
+
+/* Smooth Pulse for Cake */
+.cake-anim {
+    animation: cakePulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes cakePulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 10px #fff); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 30px #ff4d6d); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 10px #fff); }
+}
+
+/* Sweet Sway for Teddy */
+.teddy-anim {
+    animation: teddySway 3s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes teddySway {
+    0% { transform: rotate(-5deg) translateY(0); }
+    50% { transform: rotate(5deg) translateY(-15px); }
+    100% { transform: rotate(-5deg) translateY(0); }
+}
     </style>
 </head>
 <body>
@@ -152,12 +184,26 @@
         <button id="unlock-btn" class="btn" style="display: none;" onclick="nextPage(4)">UNLOCKED! Enter →</button>
     </section>
 
-    <section id="page4" class="page">
-        <h1>HAPPY BIRTHDAY! ❤️</h1>
-        <p>I hope your day is as incredible as you are. I can't wait to celebrate many more with you.</p>
-        <div style="font-size: 5rem;">🎁✨💃</div>
-        <p><i>Check your actual gift now! 😉</i></p>
-    </section>
+   <section id="page4" class="page">
+    <h1>A Sweet Treat for You! 🎂</h1>
+    <p>Blow out the candles (or just click the button)!</p>
+    <div class="gift-container cake-anim">🎂</div>
+    <button class="btn" onclick="nextPage(5)">Eat Cake & Continue →</button>
+</section>
+
+<section id="page5" class="page">
+    <h1>A Virtual Cuddle 🧸</h1>
+    <p>Since I can't be there to give you a hug right this second...</p>
+    <div class="gift-container teddy-anim">🧸</div>
+    <button class="btn" onclick="nextPage(6)">Accept Hug →</button>
+</section>
+
+<section id="page6" class="page">
+    <h1>HAPPY BIRTHDAY! ❤️</h1>
+    <p>I hope your day is as incredible as you are. I can't wait to celebrate many more with you.</p>
+    <div style="font-size: 5rem;">🎁✨💃</div>
+    <p><i>Check your actual gift now! 😉</i></p>
+</section>
 
     <script>
         // Page Navigation
